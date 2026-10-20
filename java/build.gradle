@@ -1,0 +1,30 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'io.github.srikrishnal'
+version = '0.1.0'
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// Java 11 bytecode and API, so the library also works on Android.
+tasks.withType(JavaCompile).configureEach {
+    options.release = 11
+}
+
+javadoc {
+    options.addBooleanOption('Xdoclint:all,-missing', true)
+}
+
+// The tests have no dependencies: a small runner checks every shared vector
+// in ../spec/vectors plus a few unit cases, and fails the build on a mismatch.
+tasks.register('conformance', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'io.github.srikrishnal.gpsvet.ConformanceTest'
+    args file('../spec/vectors').absolutePath
+}
+tasks.named('check') { dependsOn 'conformance' }
