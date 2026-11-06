@@ -1,0 +1,29 @@
+{
+  "name": "gpsvet",
+  "version": "0.1.0",
+  "description": "Detect spoofed and tampered GPS tracks",
+  "license": "Apache-2.0",
+  "author": "Sri Krishna Lingamaneni",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["gps", "gnss", "spoofing", "location", "fraud-detection", "geospatial"],
+  "repository": { "type": "git", "url": "git+https://github.com/srikrishnaL/gpsvet.git", "directory": "javascript" },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}

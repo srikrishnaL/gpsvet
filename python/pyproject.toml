@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpsvet"
+version = "0.1.0"
+description = "Detect spoofed and tampered GPS tracks"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Sri Krishna Lingamaneni" }]
+keywords = ["gps", "gnss", "spoofing", "location", "fraud-detection", "geospatial"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Security",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+gpsvet = "gpsvet.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/srikrishnaL/gpsvet"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
