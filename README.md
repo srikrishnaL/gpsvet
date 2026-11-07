@@ -84,7 +84,7 @@ const report = detect(fixes, { profile: "car" }); // fixes: {lat, lon, t, speed?
 if (report.spoofed) console.log(report.events());
 ```
 
-**Java / Kotlin / Android** (`java/`)
+**Java / Kotlin / Android** (`java/`), Maven `io.github.srikrishnal:gpsvet:0.1.0`
 
 ```java
 Report report = GpsVet.detect(fixes, Profile.CAR); // List<Fix>

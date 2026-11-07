@@ -63,7 +63,5 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.14.3"
-      - run: gradle build
+          cache: maven
+      - run: mvn -B verify
