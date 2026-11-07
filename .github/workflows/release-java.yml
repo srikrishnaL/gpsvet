@@ -1,0 +1,49 @@
+name: Release Java
+
+# Publishes java/ to Maven Central as io.github.srikrishnal:gpsvet.
+# Start it by publishing a GitHub release with a tag like java-v0.1.0
+# (the version must match <version> in java/pom.xml), or run it by hand.
+#
+# Repository secrets it needs:
+#   MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD  user token from central.sonatype.com
+#   MAVEN_GPG_PRIVATE_KEY                           armored private key (gpg --armor --export-secret-keys)
+#   MAVEN_GPG_PASSPHRASE                            its passphrase
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'java-v')
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: java
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Check the tag matches the pom version
+        if: github.event_name == 'release'
+        run: |
+          version=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          tag="${{ github.event.release.tag_name }}"
+          if [ "java-v$version" != "$tag" ]; then
+            echo "Tag $tag does not match pom version $version (expected java-v$version)"
+            exit 1
+          fi
+      - run: mvn -B -Prelease deploy
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
